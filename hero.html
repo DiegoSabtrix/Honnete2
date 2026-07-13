@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Honnête, LLC — management consulting for government and commercial clients across healthcare, technology, and workforce. Redesigned hero preview.">
+  <title>Honnête — Where Trust Meets the Mission</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS — precompiled & purged (production build, no CDN, no build step at runtime) -->
+  <link rel="stylesheet" href="assets/hero.tw.css">
+
+  <style>
+    :root{ --e: cubic-bezier(0.22, 1, 0.36, 1); }
+    html{ scroll-behavior:smooth; }
+    body{ font-family:'Open Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+
+    /* ── Cinematic video stack: slow cross-fades between scenes ── */
+    .scene{ opacity:0; transition:opacity 2.2s var(--e); will-change:opacity; }
+    .scene.is-active{ opacity:1; }
+    .scene video{ width:100%; height:100%; object-fit:cover; }
+
+    /* Brand logo (white PNG) tinted to Honnête gold */
+    .logo-gold{ filter:brightness(0) saturate(100%) invert(58%) sepia(52%) saturate(560%) hue-rotate(2deg) brightness(92%) contrast(87%); }
+
+    /* ── Entrance choreography (staggered, GPU-friendly) ── */
+    .r{ opacity:0; transform:translateY(24px); animation:rise .9s var(--e) forwards; }
+    .r-nav{ opacity:0; transform:translateY(-16px); animation:drop .8s var(--e) forwards; }
+    @keyframes rise{ to{ opacity:1; transform:none; } }
+    @keyframes drop{ to{ opacity:1; transform:none; } }
+
+    /* headline line masks */
+    .ln{ display:block; overflow:hidden; padding-bottom:.04em; }
+    .ln > span{ display:block; transform:translateY(110%); animation:lnup 1s var(--e) forwards; }
+    @keyframes lnup{ to{ transform:none; } }
+
+    /* subtle continuous float on the accent rule */
+    @keyframes floaty{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-4px); } }
+    .floaty{ animation:floaty 6s ease-in-out infinite; }
+
+    /* secondary CTA underline sweep */
+    .u-link .u{ position:relative; }
+    .u-link .u::after{ content:""; position:absolute; left:0; right:0; bottom:-3px; height:1.5px;
+      background:#D9B978; transform:scaleX(0); transform-origin:left; transition:transform .45s var(--e); }
+    .u-link:hover .u::after{ transform:scaleX(1); }
+
+    /* scroll hint pulse */
+    @keyframes hintdot{ 0%{ transform:translateY(0); opacity:1;} 60%{ transform:translateY(8px); opacity:.2;} 100%{ transform:translateY(0); opacity:1;} }
+    .hintdot{ animation:hintdot 2.4s var(--e) infinite; }
+
+    /* sticky nav shrink (stable class, toggled by JS) */
+    #navbar{ transition:padding .4s var(--e), box-shadow .4s var(--e), backdrop-filter .4s var(--e); }
+    #navbar.is-shrink{ padding-top:.4rem; padding-bottom:.4rem;
+      box-shadow:0 16px 44px -14px rgba(10,20,42,.42);
+      -webkit-backdrop-filter:blur(28px) saturate(1.4); backdrop-filter:blur(28px) saturate(1.4); }
+
+    @media (prefers-reduced-motion: reduce){
+      .scene{ transition:none; }
+      .r,.r-nav,.ln>span{ animation:none !important; opacity:1 !important; transform:none !important; }
+      .floaty,.hintdot{ animation:none !important; }
+    }
+  </style>
+</head>
+
+<body class="bg-navy-deep text-white antialiased">
+
+  <!-- ════════════════ HERO ════════════════ -->
+  <header class="relative min-h-[100svh] w-full overflow-hidden">
+
+    <!-- Layer 0 · cinematic video sequence -->
+    <div class="absolute inset-0 -z-20 bg-navy-deep" aria-hidden="true">
+      <div class="scene is-active absolute inset-0" data-scene="0">
+        <video autoplay muted loop playsinline preload="auto">
+          <source src="media/hero-program.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="scene absolute inset-0" data-scene="1">
+        <video muted loop playsinline preload="none">
+          <source src="media/hero-it.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="scene absolute inset-0" data-scene="2">
+        <video muted loop playsinline preload="none">
+          <source src="media/hero-healthcare.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="scene absolute inset-0" data-scene="3">
+        <video muted loop playsinline preload="none">
+          <source src="media/hero-biomedical.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <!-- Layer 1 · readability overlay: ~80% left → ~15% right, + soft top/bottom -->
+    <div class="absolute inset-0 -z-10" aria-hidden="true"
+         style="background:
+           linear-gradient(90deg, rgba(10,20,42,0.84) 0%, rgba(10,20,42,0.64) 34%, rgba(10,20,42,0.32) 66%, rgba(10,20,42,0.15) 100%),
+           linear-gradient(180deg, rgba(10,20,42,0.45) 0%, transparent 22%, transparent 66%, rgba(10,20,42,0.60) 100%);"></div>
+
+    <!-- ── Floating nav ── -->
+    <nav class="r-nav fixed inset-x-0 top-4 sm:top-5 z-50 px-3 sm:px-6" style="animation-delay:.15s">
+      <div id="navbar"
+           class="mx-auto flex w-[94%] max-w-[1240px] items-center justify-between gap-4
+                  rounded-full bg-white/95 px-4 sm:px-6 py-2.5 sm:py-3
+                  shadow-[0_10px_40px_-12px_rgba(10,20,42,0.28)] ring-1 ring-navy/10
+                  backdrop-blur-xl">
+        <!-- logo -->
+        <a href="#top" class="flex items-center gap-2 shrink-0" aria-label="Honnête home">
+          <img src="https://honnete.us/wp-content/uploads/2020/03/Honnete-Logo-White@2x.png"
+               alt="Honnête" class="logo-gold h-7 sm:h-8 w-auto">
+        </a>
+
+        <!-- center menu -->
+        <ul class="hidden lg:flex items-center gap-1 text-[0.9rem] font-semibold text-navy">
+          <li><a href="#top"        class="rounded-full px-4 py-2 transition-colors hover:bg-navy/5 hover:text-blue">Home</a></li>
+          <li><a href="#about"      class="rounded-full px-4 py-2 transition-colors hover:bg-navy/5 hover:text-blue">About</a></li>
+          <li><a href="#solutions"  class="rounded-full px-4 py-2 transition-colors hover:bg-navy/5 hover:text-blue">Solutions</a></li>
+          <li><a href="#industries" class="rounded-full px-4 py-2 transition-colors hover:bg-navy/5 hover:text-blue">Industries</a></li>
+          <li><a href="#careers"    class="rounded-full px-4 py-2 transition-colors hover:bg-navy/5 hover:text-blue">Careers</a></li>
+          <li><a href="#contact"    class="rounded-full px-4 py-2 transition-colors hover:bg-navy/5 hover:text-blue">Contact</a></li>
+        </ul>
+
+        <!-- primary CTA -->
+        <a href="#contact"
+           class="group inline-flex items-center gap-2 rounded-full bg-navy px-4 sm:px-5 py-2.5
+                  text-[0.82rem] font-semibold tracking-wide text-pearl shadow-sm
+                  transition-all duration-300 ease-out hover:-translate-y-0.5
+                  hover:bg-navy-deep hover:shadow-[0_14px_30px_-10px_rgba(10,20,42,0.6)]
+                  focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-soft">
+          <span class="hidden sm:inline">Capability Statement</span>
+          <span class="sm:hidden">Capabilities</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-y-0.5" aria-hidden="true">
+            <path d="M8 2.5v8M4.5 7l3.5 3.5L11.5 7M3 13.5h10"/>
+          </svg>
+        </a>
+      </div>
+    </nav>
+
+    <!-- ── Hero content ── -->
+    <div id="top" class="relative z-10 mx-auto flex min-h-[100svh] w-[90%] max-w-[1240px] items-center">
+      <div class="w-full max-w-[660px] py-32">
+
+        <!-- eyebrow -->
+        <div class="r flex items-center gap-3" style="animation-delay:.45s">
+          <span class="floaty h-px w-10 bg-gold-soft/80"></span>
+          <p class="text-[0.72rem] sm:text-[0.78rem] font-semibold uppercase tracking-[0.2em] text-gold-soft">
+            Management Consulting • Government • Commercial
+          </p>
+        </div>
+
+        <!-- headline -->
+        <h1 class="mt-6 font-extrabold tracking-[-0.02em] text-white
+                   text-[clamp(2.9rem,6.6vw,5rem)] leading-[1.03]">
+          <span class="ln"><span style="animation-delay:.55s">Where trust</span></span>
+          <span class="ln"><span style="animation-delay:.67s">meets the</span></span>
+          <span class="ln"><span style="animation-delay:.79s"><em class="not-italic bg-gradient-to-r from-gold-soft via-gold to-gold-soft bg-clip-text text-transparent">mission.</em></span></span>
+        </h1>
+
+        <!-- supporting paragraph -->
+        <p class="r mt-7 max-w-[33rem] text-[1.02rem] sm:text-[1.12rem] leading-relaxed text-pearl/80"
+           style="animation-delay:.95s">
+          Honnête partners with government agencies and commercial leaders across
+          healthcare, technology, and workforce — turning complex mandates into
+          measurable outcomes.
+        </p>
+
+        <!-- CTAs -->
+        <div class="r mt-9 flex flex-wrap items-center gap-x-7 gap-y-4" style="animation-delay:1.1s">
+          <a href="#contact"
+             class="group inline-flex items-center gap-2.5 rounded-full
+                    bg-gradient-to-b from-gold-soft to-gold px-7 py-4
+                    text-[0.98rem] font-bold text-[#20160A]
+                    shadow-[0_14px_36px_-10px_rgba(195,144,53,0.6)]
+                    transition-all duration-300 ease-out hover:-translate-y-0.5
+                    hover:shadow-[0_20px_46px_-12px_rgba(195,144,53,0.72)]
+                    focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
+            Schedule a Consultation
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">
+              <path d="M2.5 8h11M9.5 4l4 4-4 4"/>
+            </svg>
+          </a>
+
+          <a href="#solutions" class="u-link inline-flex items-center gap-2 text-[0.98rem] font-semibold text-white/90 transition-colors hover:text-white">
+            <span class="u">Explore our solutions</span>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-gold-soft" aria-hidden="true">
+              <path d="M2.5 8h11M9.5 4l4 4-4 4"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- trust strip -->
+        <div class="r mt-14 flex items-center gap-4" style="animation-delay:1.25s">
+          <div class="flex">
+            <span class="grid h-9 w-9 place-items-center rounded-full border-2 border-navy-deep bg-gradient-to-br from-gold-soft to-gold text-xs font-bold text-[#20160A]">H</span>
+            <span class="-ml-2.5 grid h-9 w-9 place-items-center rounded-full border-2 border-navy-deep bg-gradient-to-br from-blue to-navy text-xs font-bold text-white">◆</span>
+            <span class="-ml-2.5 grid h-9 w-9 place-items-center rounded-full border-2 border-navy-deep bg-gradient-to-br from-pearl to-gold-soft text-xs font-bold text-[#20160A]">★</span>
+            <span class="-ml-2.5 grid h-9 w-9 place-items-center rounded-full border-2 border-navy-deep bg-navy text-xs font-bold text-gold-soft">+</span>
+          </div>
+          <p class="text-[0.86rem] leading-snug text-pearl/70">
+            <span class="font-bold text-white">150+ programs delivered</span><br>
+            for agencies &amp; enterprises since 2011.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- scroll hint -->
+    <a href="#next" class="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 flex flex-col items-center gap-2 text-white/60 hover:text-white transition-colors" aria-label="Scroll down">
+      <span class="text-[0.68rem] font-semibold uppercase tracking-[0.2em]">Scroll</span>
+      <span class="flex h-8 w-5 justify-center rounded-full border border-white/40 pt-1.5">
+        <span class="hintdot h-1.5 w-1.5 rounded-full bg-gold-soft"></span>
+      </span>
+    </a>
+  </header>
+
+  <!-- placeholder next section (shows sticky-nav shrink on scroll) -->
+  <section id="next" class="bg-pearl px-6 py-28 text-navy">
+    <div class="mx-auto max-w-[1240px]">
+      <p class="text-[0.78rem] font-semibold uppercase tracking-[0.2em] text-gold">Preview note</p>
+      <h2 class="mt-3 max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl">
+        The rest of the Honnête site continues here.
+      </h2>
+      <p class="mt-4 max-w-2xl text-navy/70">
+        Scroll up and down to see the floating navigation shrink, blur and gain a
+        shadow. This section is only a placeholder so the sticky behaviour is testable.
+      </p>
+    </div>
+  </section>
+
+  <script>
+    /* ── Cinematic scene sequencer: slow cross-fade every ~7s ── */
+    (function () {
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var scenes = Array.prototype.slice.call(document.querySelectorAll('.scene'));
+      if (reduce || scenes.length < 2) return;
+      var i = 0;
+      setInterval(function () {
+        var next = (i + 1) % scenes.length;
+        var v = scenes[next].querySelector('video');
+        if (v && v.preload === 'none') { v.preload = 'auto'; v.load(); }
+        var play = v && v.play(); if (play && play.catch) play.catch(function(){});
+        scenes[i].classList.remove('is-active');
+        scenes[next].classList.add('is-active');
+        i = next;
+      }, 7000);
+    })();
+
+    /* ── Sticky nav: shrink + stronger blur/shadow after scroll ── */
+    (function () {
+      var bar = document.getElementById('navbar');
+      var onScroll = function () { bar.classList.toggle('is-shrink', window.scrollY > 24); };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+  </script>
+</body>
+</html>
