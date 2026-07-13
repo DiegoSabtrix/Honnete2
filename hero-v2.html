@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Honnête, LLC — modern management consulting and technology for government and commercial missions.">
+  <title>Honnête — Built for the missions that matter</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Fraunces:opsz,wght@9..144,400;9..144,500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS — precompiled & purged (no runtime CDN) -->
+  <link rel="stylesheet" href="assets/hero-v2.tw.css">
+
+  <style>
+    :root{ --e: cubic-bezier(0.22, 1, 0.36, 1); }
+    html{ scroll-behavior:smooth; }
+    body{ font-family:'Open Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+    .serif{ font-family:'Fraunces', Georgia, serif; }
+
+    /* ── atmospheric base: warm pearl with slow drifting light ── */
+    .atmos{ position:absolute; inset:0; z-index:-2; overflow:hidden; background:#F6F3EA; }
+    .atmos::before{ content:""; position:absolute; inset:-25%;
+      background:
+        radial-gradient(42% 55% at 18% 22%, rgba(104,133,180,0.18), transparent 60%),
+        radial-gradient(45% 50% at 88% 82%, rgba(195,144,53,0.10), transparent 62%),
+        radial-gradient(60% 60% at 62% 8%, rgba(255,255,255,0.9), transparent 70%);
+      animation:drift 30s ease-in-out infinite alternate; will-change:transform; }
+    @keyframes drift{ from{ transform:translate3d(-1.5%,-1%,0) scale(1.02); } to{ transform:translate3d(1.5%,1.5%,0) scale(1.06); } }
+    /* hairline grid, barely there */
+    .atmos::after{ content:""; position:absolute; inset:0;
+      background-image:linear-gradient(rgba(18,42,78,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(18,42,78,.05) 1px,transparent 1px);
+      background-size:88px 88px;
+      -webkit-mask-image:radial-gradient(75% 70% at 30% 40%,#000,transparent 80%); mask-image:radial-gradient(75% 70% at 30% 40%,#000,transparent 80%);
+      opacity:.5; }
+
+    /* ── media panel: framed cinematic video ── */
+    .media video{ width:100%; height:100%; object-fit:cover; }
+    .scene{ position:absolute; inset:0; opacity:0; transition:opacity 2.4s var(--e); will-change:opacity; }
+    .scene.is-active{ opacity:1; }
+    /* blend the panel into the page: soft inner vignette + left feather */
+    .media-veil{ position:absolute; inset:0; pointer-events:none;
+      background:
+        linear-gradient(90deg, rgba(246,243,234,0.55) 0%, rgba(246,243,234,0.0) 24%),
+        linear-gradient(200deg, rgba(12,32,64,0.0) 55%, rgba(12,32,64,0.28) 100%);
+      box-shadow:inset 0 0 90px rgba(12,32,64,0.22); }
+
+    /* brand logo tint (white PNG → deep navy) */
+    .logo-navy{ filter:brightness(0) saturate(100%) invert(13%) sepia(37%) saturate(1600%) hue-rotate(193deg) brightness(94%) contrast(93%); }
+
+    /* ── entrance: subtle, calm ── */
+    .in{ opacity:0; transform:translateY(14px); animation:in 1s var(--e) forwards; }
+    .in-nav{ opacity:0; transform:translateY(-10px); animation:in 0.9s var(--e) .1s forwards; }
+    @keyframes in{ to{ opacity:1; transform:none; } }
+    .panel-in{ opacity:0; transform:scale(0.98); animation:panelin 1.3s var(--e) .2s forwards; transform-origin:center; }
+    @keyframes panelin{ to{ opacity:1; transform:scale(1); } }
+
+    /* mission chip — minimal, low motion */
+    .chip{ backdrop-filter:blur(10px) saturate(1.3); -webkit-backdrop-filter:blur(10px) saturate(1.3); }
+    .chip .dot{ box-shadow:0 0 0 0 rgba(217,185,120,.6); animation:ping 3s var(--e) infinite; }
+    @keyframes ping{ 0%{ box-shadow:0 0 0 0 rgba(217,185,120,.6);} 70%,100%{ box-shadow:0 0 0 8px transparent;} }
+
+    /* secondary underline */
+    .u-link .u{ position:relative; }
+    .u-link .u::after{ content:""; position:absolute; left:0; right:0; bottom:-3px; height:1.5px; background:#C39035;
+      transform:scaleX(0); transform-origin:left; transition:transform .45s var(--e); }
+    .u-link:hover .u::after{ transform:scaleX(1); }
+
+    /* slim nav: subtle bottom hairline that strengthens on scroll */
+    #nav{ transition:background .4s var(--e), box-shadow .4s var(--e), border-color .4s var(--e); }
+    #nav.is-scrolled{ background:rgba(248,245,237,0.82); box-shadow:0 1px 0 rgba(18,42,78,0.08), 0 10px 30px -18px rgba(18,42,78,0.25); border-color:rgba(18,42,78,0.10); }
+
+    /* mobile menu */
+    .m-panel{ transition:opacity .35s var(--e), transform .35s var(--e), visibility .35s; }
+    .m-panel[hidden]{ display:block; opacity:0; visibility:hidden; transform:translateY(-8px); pointer-events:none; }
+
+    @media (prefers-reduced-motion: reduce){
+      .atmos::before,.scene,.chip .dot{ animation:none !important; transition:none !important; }
+      .in,.in-nav,.panel-in{ animation:none !important; opacity:1 !important; transform:none !important; }
+    }
+  </style>
+</head>
+
+<body class="bg-[#F6F3EA] text-navy antialiased">
+
+  <!-- ── slim, architectural nav ── -->
+  <header class="fixed inset-x-0 top-0 z-50">
+    <nav id="nav" class="in-nav border-b border-transparent">
+      <div class="mx-auto flex h-[64px] max-w-[1320px] items-center justify-between px-6 sm:px-10">
+        <!-- logo -->
+        <a href="#" class="flex items-center gap-2 shrink-0" aria-label="Honnête home">
+          <img src="https://honnete.us/wp-content/uploads/2020/03/Honnete-Logo-White@2x.png" alt="Honnête" class="logo-navy h-6 w-auto">
+        </a>
+        <!-- center menu -->
+        <ul class="hidden md:flex items-center gap-9 text-[0.82rem] font-semibold tracking-wide text-navy/75">
+          <li><a href="#" class="transition-colors hover:text-navy">Home</a></li>
+          <li><a href="#" class="transition-colors hover:text-navy">About</a></li>
+          <li><a href="#" class="transition-colors hover:text-navy">Solutions</a></li>
+          <li><a href="#" class="transition-colors hover:text-navy">Industries</a></li>
+          <li><a href="#" class="transition-colors hover:text-navy">Careers</a></li>
+          <li><a href="#" class="transition-colors hover:text-navy">Contact</a></li>
+        </ul>
+        <!-- right -->
+        <div class="flex items-center gap-3">
+          <a href="#" class="hidden sm:inline-flex items-center gap-2 rounded-md border border-navy/20 bg-white/40 px-4 py-2 text-[0.8rem] font-semibold text-navy transition-all duration-300 hover:-translate-y-px hover:border-navy/35 hover:bg-white/70">
+            Capability Statement
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5" aria-hidden="true"><path d="M8 2.5v8M4.5 7l3.5 3.5L11.5 7M3 13.5h10"/></svg>
+          </a>
+          <!-- mobile toggle -->
+          <button id="mtoggle" class="md:hidden inline-grid h-10 w-10 place-items-center rounded-md border border-navy/15 text-navy" aria-label="Open menu" aria-expanded="false" aria-controls="mmenu">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+          </button>
+        </div>
+      </div>
+      <!-- mobile menu panel -->
+      <div id="mmenu" class="m-panel md:hidden border-t border-navy/10 bg-[#F6F3EA]/95 backdrop-blur-lg" hidden>
+        <ul class="flex flex-col px-6 py-3 text-[0.95rem] font-semibold text-navy/85">
+          <li><a href="#" class="block py-2.5 border-b border-navy/5">Home</a></li>
+          <li><a href="#" class="block py-2.5 border-b border-navy/5">About</a></li>
+          <li><a href="#" class="block py-2.5 border-b border-navy/5">Solutions</a></li>
+          <li><a href="#" class="block py-2.5 border-b border-navy/5">Industries</a></li>
+          <li><a href="#" class="block py-2.5 border-b border-navy/5">Careers</a></li>
+          <li><a href="#" class="block py-2.5">Contact</a></li>
+          <li class="pt-3 pb-2"><a href="#" class="inline-flex items-center gap-2 rounded-md bg-navy px-4 py-2.5 text-[0.85rem] font-semibold text-pearl">Capability Statement
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5" aria-hidden="true"><path d="M8 2.5v8M4.5 7l3.5 3.5L11.5 7M3 13.5h10"/></svg></a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ════════════════ HERO ════════════════ -->
+  <main class="relative min-h-[100svh] w-full overflow-hidden">
+    <div class="atmos" aria-hidden="true"></div>
+
+    <div class="mx-auto grid min-h-[100svh] max-w-[1320px] grid-cols-1 items-center gap-y-12 px-6 pt-28 pb-16 sm:px-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-x-16 lg:pt-0 lg:pb-0">
+
+      <!-- ── LEFT · editorial copy ── -->
+      <div class="max-w-[560px] lg:pr-4">
+        <p class="in flex items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-gold-deep" style="animation-delay:.25s">
+          <span class="h-px w-8 bg-gold-deep/60"></span>
+          Management Consulting · Government · Commercial
+        </p>
+
+        <h1 class="in serif mt-7 text-[clamp(2.5rem,4.6vw,4rem)] font-medium leading-[1.06] tracking-[-0.015em] text-navy-deep" style="animation-delay:.35s">
+          Built for the<br>missions that <span class="italic text-gold-deep">matter.</span>
+        </h1>
+
+        <p class="in mt-6 max-w-[32rem] text-[1.02rem] leading-relaxed text-ink-soft" style="animation-delay:.5s">
+          Honnête pairs seasoned consultants with modern technology to help government
+          and commercial leaders turn complex mandates into measurable outcomes.
+        </p>
+
+        <div class="in mt-9 flex flex-wrap items-center gap-x-7 gap-y-4" style="animation-delay:.65s">
+          <a href="#" class="group inline-flex items-center gap-2.5 rounded-lg bg-navy px-6 py-3.5 text-[0.95rem] font-semibold text-pearl shadow-[0_12px_30px_-12px_rgba(18,42,78,0.6)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-navy-deep hover:shadow-[0_18px_40px_-14px_rgba(18,42,78,0.7)] focus:outline-none focus-visible:ring-2 focus-visible:ring-gold">
+            Schedule a Consultation
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true"><path d="M2.5 8h11M9.5 4l4 4-4 4"/></svg>
+          </a>
+          <a href="#" class="u-link inline-flex items-center gap-2 text-[0.95rem] font-semibold text-navy/80 transition-colors hover:text-navy">
+            <span class="u">Explore our solutions</span>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-gold-deep" aria-hidden="true"><path d="M2.5 8h11M9.5 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- ── RIGHT · cinematic media panel ── -->
+      <div class="panel-in relative">
+        <div class="media relative aspect-[16/10] w-full overflow-hidden rounded-[26px] bg-navy-deep shadow-[0_50px_100px_-40px_rgba(12,32,64,0.6)] ring-1 ring-navy/10 sm:aspect-[16/11] lg:aspect-[4/5]">
+          <div class="scene is-active" data-scene="0"><video autoplay muted loop playsinline preload="auto"><source src="media/hero-program.mp4" type="video/mp4"></video></div>
+          <div class="scene" data-scene="1"><video muted loop playsinline preload="none"><source src="media/hero-it.mp4" type="video/mp4"></video></div>
+          <div class="scene" data-scene="2"><video muted loop playsinline preload="none"><source src="media/hero-healthcare.mp4" type="video/mp4"></video></div>
+          <div class="scene" data-scene="3"><video muted loop playsinline preload="none"><source src="media/hero-biomedical.mp4" type="video/mp4"></video></div>
+          <div class="media-veil" aria-hidden="true"></div>
+
+          <!-- floating mission label -->
+          <div class="chip absolute bottom-5 left-5 flex items-center gap-2.5 rounded-full border border-white/25 bg-navy-deep/35 px-4 py-2">
+            <span class="dot h-2 w-2 rounded-full bg-gold-soft"></span>
+            <span class="text-[0.78rem] font-semibold tracking-wide text-white/95">Mission in progress · Program Delivery</span>
+          </div>
+        </div>
+        <!-- soft echo behind the panel for depth -->
+        <div class="absolute -right-6 -top-6 -z-10 hidden h-full w-full rounded-[26px] bg-gradient-to-br from-blue/10 to-gold/10 blur-2xl lg:block" aria-hidden="true"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    /* cinematic crossfade every ~7s */
+    (function(){
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var s = [].slice.call(document.querySelectorAll('.scene'));
+      if(reduce || s.length<2) return; var i=0;
+      setInterval(function(){
+        var n=(i+1)%s.length, v=s[n].querySelector('video');
+        if(v && v.preload==='none'){ v.preload='auto'; v.load(); }
+        var pr=v&&v.play(); if(pr&&pr.catch) pr.catch(function(){});
+        s[i].classList.remove('is-active'); s[n].classList.add('is-active'); i=n;
+      },7000);
+    })();
+    /* nav hairline on scroll */
+    (function(){ var n=document.getElementById('nav');
+      var f=function(){ n.classList.toggle('is-scrolled', scrollY>16); }; addEventListener('scroll',f,{passive:true}); f(); })();
+    /* mobile menu */
+    (function(){ var b=document.getElementById('mtoggle'), m=document.getElementById('mmenu');
+      b.addEventListener('click',function(){ var open=m.hasAttribute('hidden'); if(open){ m.removeAttribute('hidden'); } else { m.setAttribute('hidden',''); }
+        b.setAttribute('aria-expanded', String(open)); }); })();
+  </script>
+</body>
+</html>
